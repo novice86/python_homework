@@ -11,7 +11,7 @@ def greet(name):
 # Task3
 def addition(num1, num2):
     try:
-        res = num1 + num2
+        res = round(num1 + num2, 1)
     except TypeError:
         return "You can't add those values!"
     else:
@@ -20,7 +20,7 @@ def addition(num1, num2):
 
 def subtraction(num1, num2):
     try:
-        res = num1 - num2
+        res = round(num1 - num2, 1)
     except TypeError:
         return "You can't subtract those values!"
     else:
@@ -29,7 +29,7 @@ def subtraction(num1, num2):
 
 def multiplication(num1, num2):
     try:
-        res = num1 * num2
+        res = round(num1 * num2, 1)
     except TypeError:
         return "You can't multiply those values!"
     else:
@@ -39,7 +39,7 @@ def multiplication(num1, num2):
 def division(num1, num2, int_divide=False):
     try:
         if not int_divide:
-            res = num1 / num2
+            res = round(num1 / num2, 1)
         else:
             res = num1 // num2
     except ZeroDivisionError:
@@ -52,7 +52,7 @@ def division(num1, num2, int_divide=False):
 
 def modulo(num1, num2):
     try:
-        res = num1 % num2
+        res = round(num1 % num2, 1)
     except ZeroDivisionError:
         return "You can't divide by 0!" 
     except TypeError:
@@ -63,7 +63,7 @@ def modulo(num1, num2):
 
 def power(num1, num2):
     try:
-        res = num1 ** num2
+        res = round(num1 ** num2, 1)
     except TypeError:
         return f"You can't exponentiate those values: {num1} and {num2}"
     else:
