@@ -43,9 +43,9 @@ def division(num1, num2, int_divide=False):
         else:
             res = num1 // num2
     except ZeroDivisionError:
-        return "You can't divide by 0!" # it is for the comparison with the test case, because the test case expects a string, not an exception
+        return "You can't divide by 0!"
     except TypeError:
-        raise TypeError(f"You can't divide those values: {num1} and {num2}")
+        return f"You can't divide those values: {num1} and {num2}"
     else:
         return res
 
@@ -54,9 +54,9 @@ def modulo(num1, num2):
     try:
         res = num1 % num2
     except ZeroDivisionError:
-        return "You can't divide by 0!" # it is for the comparison with the test case, because the test case expects a string, not an exception
+        return "You can't divide by 0!" 
     except TypeError:
-        raise TypeError(f"You can't modulo those values: {num1} and {num2}")
+        return f"You can't modulo those values: {num1} and {num2}"
     else:
         return res
 
@@ -65,7 +65,7 @@ def power(num1, num2):
     try:
         res = num1 ** num2
     except TypeError:
-        raise TypeError(f"You can't exponentiate those values: {num1} and {num2}")
+        return f"You can't exponentiate those values: {num1} and {num2}"
     else:
         return res
 
@@ -86,6 +86,8 @@ def calc(num1, num2, operation="multiply"):
             return modulo(num1, num2)
         case "power":
             return power(num1, num2)
+        case _:
+            return "Invalid operation provided."
 
 
 # Task4
@@ -125,10 +127,10 @@ def grade(*args):
     
 # Task 6
 def repeat(string, times):
-    print(f"Repeating {string} {times} times.")
-    for i in range(times - 2):
-        string += string
-    return string
+    res = ""
+    for i in range(times):
+        res += string
+    return res
 
 
 # Task 7
