@@ -1,0 +1,225 @@
+import csv 
+import os
+
+from datetime import datetime
+
+import custom_module
+
+
+# Get the directory of the current script
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Get the parent directory of the script's directory
+PARENT_DIR = os.path.dirname(SCRIPT_DIR)
+
+# Define the path to the employees.csv file in the csv folder
+EMPLOYEE_CSV_PATH = os.path.join(PARENT_DIR, "csv", "employees.csv")
+print(EMPLOYEE_CSV_PATH)
+
+# Task2
+def read_employees():
+    employees_data = {}
+    rows = []
+
+    try:
+        with open(EMPLOYEE_CSV_PATH, mode='r') as csvfile:
+            reader = csv.reader(csvfile)
+            for i, row in enumerate(reader):
+                if i == 0:
+                    employees_data['fields'] = row
+                    continue
+                rows.append(row)
+    except FileNotFoundError:
+        print("File not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    employees_data['rows'] = rows
+    return employees_data
+
+
+employees = read_employees()
+
+# Task3
+def column_index(column_name):
+    if 'fields' not in employees:
+        raise KeyError("Field data is not available.")
+
+    try:
+        return employees['fields'].index(column_name)
+    except ValueError:
+        raise ValueError(f"Column '{column_name}' not found.")
+
+employee_id_column = column_index("employee_id")
+
+
+# Task4
+def first_name(row_number):
+    c_idx = column_index("first_name")
+    if "rows" not in employees:
+        raise KeyError("Employee data is not available.")
+
+    try:
+        return employees['rows'][row_number][c_idx]
+    except IndexError:
+        raise IndexError(f"Row number {row_number} is out of range.")
+
+
+# Task5
+def employee_find(employee_id):
+    def employee_match(row):
+        return int(row[employee_id_column]) == employee_id
+    
+    if "rows" not in employees:
+        raise KeyError("Employee data is not available.")
+
+    matches = list(filter(employee_match, employees['rows']))
+    return matches
+
+
+# Task6
+def employee_find_2(employee_id):
+    if "rows" not in employees:
+        raise KeyError("Employee data is not available.")
+    
+    matches = list(filter(lambda row: int(row[employee_id_column]) == employee_id, employees['rows']))
+    
+    return matches
+
+
+# Task7
+def sort_by_last_name():
+    if "rows" not in employees:
+        raise KeyError("Employee data is not available.")
+    
+    last_name_index = column_index("last_name")
+    employees['rows'].sort(key=lambda row: row[last_name_index])
+    return employees['rows']
+
+
+sorted_employees = sort_by_last_name()
+print(sorted_employees)
+
+
+# Task8
+def employee_dict(row):
+    if "fields" not in employees:
+        raise KeyError("Field data is not available.")
+    
+    empl_dict = dict(zip(employees["fields"][1:], row[1:])) # Exclude the first field (employee_id) from the dictionary
+    return empl_dict
+    
+
+# Task9
+def all_employees_dict():
+    if "rows" not in employees:
+        raise KeyError("Employee data is not available.")
+    
+    all_employees = {row[employee_id_column]: employee_dict(row) for row in employees['rows']}
+    return all_employees
+
+
+# Task10
+def get_this_value():
+    this_value = os.getenv("THISVALUE")
+    if this_value is None:
+        print("Environment variable 'THISVALUE' is not set.")
+
+    return this_value
+
+
+# Task11
+def set_that_secret(new_secret):
+    custom_module.set_secret(new_secret)
+
+
+set_that_secret("new_secret_value")
+print(custom_module.secret)  # This will print the updated secret value
+
+# Task12
+def read_csv(file_path):
+    data = {}
+    rows = []
+
+    try:
+        with open(file_path, mode='r') as csvfile:
+            reader = csv.reader(csvfile)
+            for i, row in enumerate(reader):
+                if i == 0:
+                    data['fields'] = tuple(row)
+                    continue
+                rows.append(tuple(row))
+    except FileNotFoundError:
+        print(f"File not found: {file_path}")
+    except Exception as e:
+        print(f"An error occurred while reading {file_path}: {e}")
+
+    data['rows'] = rows
+    return data
+
+def read_minutes():
+    minutes1_path = os.path.join(PARENT_DIR, "csv", "minutes1.csv")
+    minutes2_path = os.path.join(PARENT_DIR, "csv", "minutes2.csv")
+
+    minutes1_data = read_csv(minutes1_path)
+    minutes2_data = read_csv(minutes2_path)
+
+    return minutes1_data, minutes2_data
+
+
+minutes1, minutes2 = read_minutes()
+print(minutes1)
+print(minutes2)
+
+
+def get_fields():
+    if "fields" not in employees:
+        raise KeyError("Field data is not available.")
+    
+    return minutes1["fields"]
+
+
+# Task13
+def create_minutes_set():
+    if "rows" not in minutes1 or "rows" not in minutes2:
+        raise KeyError("Minutes data is not available.")
+
+    minutes_set = set(minutes1["rows"]) | set(minutes2["rows"])
+    return minutes_set
+
+
+minutes_set = create_minutes_set()
+
+
+# Task14
+def create_minutes_list():
+    minutes_list = list(minutes_set)
+    minutes_list = list(map(lambda x: (x[0], datetime.strptime(x[1], "%B %d, %Y")), minutes_list))
+
+    return minutes_list
+
+minutes_list = create_minutes_list()
+print(f"Minutes set: {minutes_list}")
+
+
+# Task15
+def write_sorted_list():
+    sorted_list = sorted(minutes_list, key=lambda x: x[1])
+    sorted_list = list(map(lambda x: (x[0], datetime.strftime(x[1], "%B %d, %Y")), sorted_list))
+
+    csv_file_path = os.path.join(SCRIPT_DIR, "minutes.csv")
+    try:
+        with open(csv_file_path, 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(get_fields())
+            for row in sorted_list:
+                writer.writerow(row)
+    except FileNotFoundError:
+        print(f"File {csv_file_path} doesn't exist")
+    except Exception as e:
+        print(f"Exception happened {e}")
+    
+    return sorted_list
+    
+
+sorted_list = write_sorted_list()
