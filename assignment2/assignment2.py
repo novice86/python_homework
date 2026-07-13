@@ -1,5 +1,6 @@
 import csv 
 import os
+import traceback
 
 from datetime import datetime
 
@@ -28,16 +29,24 @@ def read_employees():
                     employees_data['fields'] = row
                     continue
                 rows.append(row)
-    except FileNotFoundError:
-        print("File not found.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+        
+        employees_data['rows'] = rows
+        return employees_data
 
-    employees_data['rows'] = rows
-    return employees_data
+    except Exception as e:
+        trace_back = traceback.extract_tb(e.__traceback__)
+        stack_trace = list()
+        for trace in trace_back:
+            stack_trace.append(f'File : {trace[0]} , Line : {trace[1]}, Func.Name : {trace[2]}, Message : {trace[3]}')
+    
+        # Exact spelling and formatting requested by the spec
+        print(f"An exception occurred. {type(e).__name__}")
+        print(f"Stack Trace: {stack_trace}")
 
 
 employees = read_employees()
+print(employees)
+
 
 # Task3
 def column_index(column_name):
@@ -105,8 +114,17 @@ def employee_dict(row):
     if "fields" not in employees:
         raise KeyError("Field data is not available.")
     
-    empl_dict = dict(zip(employees["fields"][1:], row[1:])) # Exclude the first field (employee_id) from the dictionary
+    empl_dict = {
+        field: value
+        for field, value in zip(employees["fields"], row)
+        if field != "employee_id"
+    }
+
     return empl_dict
+
+
+empl_dict = employee_dict(employees["rows"][0])
+print(empl_dict)
     
 
 # Task9
@@ -133,7 +151,7 @@ def set_that_secret(new_secret):
 
 
 set_that_secret("new_secret_value")
-print(custom_module.secret)  # This will print the updated secret value
+print(custom_module.secret)
 
 # Task12
 def read_minutes():
@@ -166,8 +184,6 @@ def read_minutes():
 
 
 minutes1, minutes2 = read_minutes()
-print(minutes1)
-print(minutes2)
 
 
 # Task13
