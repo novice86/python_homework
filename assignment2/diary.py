@@ -9,10 +9,11 @@ os.chdir(script_dir)
 
 try:
     with open("diary.txt", "a") as file:
-        input_text = input("What happened today? ")
+        input_text = input("What happened today?")
         while input_text.lower() != "done for now":
             file.write(input_text + "\n")
-            input_text = input("What else?  ")
+            input_text = input("What else?")
+        file.write("done for now\n")
 except KeyboardInterrupt:
     print("\nDiary entry interrupted by user.")
 except Exception as e:
@@ -21,8 +22,4 @@ except Exception as e:
     for trace in trace_back:
         stack_trace.append(f'File : {trace[0]} , Line : {trace[1]}, Func.Name : {trace[2]}, Message : {trace[3]}')
     
-    print(f"Exception type: {type(e).__name__}")
-    message = str(e)
-    if message:
-        print(f"Exception message: {message}")
-    print(f"Stack trace: {stack_trace}")
+    print(f"An exception occured: Type: {type(e).__name__}, Message: {str(e)}, Stack Trace: {stack_trace}")

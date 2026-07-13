@@ -6,23 +6,22 @@ from datetime import datetime
 import custom_module
 
 
-# Get the directory of the current script
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# Get the parent directory of the script's directory
-PARENT_DIR = os.path.dirname(SCRIPT_DIR)
-
-# Define the path to the employees.csv file in the csv folder
-EMPLOYEE_CSV_PATH = os.path.join(PARENT_DIR, "csv", "employees.csv")
-print(EMPLOYEE_CSV_PATH)
-
 # Task2
 def read_employees():
+    # Get the directory of the current script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Get the parent directory of the script's directory
+    parent_dir = os.path.dirname(script_dir)
+
+    # Define the path to the employees.csv file in the csv folder
+    employee_csv_path = os.path.join(parent_dir, "csv", "employees.csv")
+
     employees_data = {}
     rows = []
 
     try:
-        with open(EMPLOYEE_CSV_PATH, mode='r') as csvfile:
+        with open(employee_csv_path, mode='r') as csvfile:
             reader = csv.reader(csvfile)
             for i, row in enumerate(reader):
                 if i == 0:
@@ -137,46 +136,38 @@ set_that_secret("new_secret_value")
 print(custom_module.secret)  # This will print the updated secret value
 
 # Task12
-def read_csv(file_path):
-    data = {}
-    rows = []
+def read_minutes():
+    # Get the directory of the current script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    try:
-        with open(file_path, mode='r') as csvfile:
+    # Get the parent directory of the script's directory
+    parent_dir = os.path.dirname(script_dir)
+
+    all_data = []
+    for file_name in ["minutes1.csv", "minutes2.csv"]:
+        file_path = os.path.join(parent_dir, "csv", file_name)
+
+        data = {}
+        rows = []
+
+        with open(file_path, mode="r") as csvfile:
             reader = csv.reader(csvfile)
             for i, row in enumerate(reader):
                 if i == 0:
-                    data['fields'] = tuple(row)
+                    data["fields"] = row
                     continue
                 rows.append(tuple(row))
-    except FileNotFoundError:
-        print(f"File not found: {file_path}")
-    except Exception as e:
-        print(f"An error occurred while reading {file_path}: {e}")
+        
+        data["rows"] = rows
+        all_data.append(data)
 
-    data['rows'] = rows
-    return data
+    return all_data[0], all_data[1]
 
-def read_minutes():
-    minutes1_path = os.path.join(PARENT_DIR, "csv", "minutes1.csv")
-    minutes2_path = os.path.join(PARENT_DIR, "csv", "minutes2.csv")
-
-    minutes1_data = read_csv(minutes1_path)
-    minutes2_data = read_csv(minutes2_path)
-
-    return minutes1_data, minutes2_data
 
 
 minutes1, minutes2 = read_minutes()
 print(minutes1)
 print(minutes2)
-
-
-def get_fields():
-    if "fields" not in employees:
-        raise KeyError("Field data is not available.")
-    
-    return minutes1["fields"]
 
 
 # Task13
@@ -204,14 +195,22 @@ print(f"Minutes set: {minutes_list}")
 
 # Task15
 def write_sorted_list():
+    # Get the directory of the current script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
     sorted_list = sorted(minutes_list, key=lambda x: x[1])
     sorted_list = list(map(lambda x: (x[0], datetime.strftime(x[1], "%B %d, %Y")), sorted_list))
 
-    csv_file_path = os.path.join(SCRIPT_DIR, "minutes.csv")
+    csv_file_path = os.path.join(script_dir, "minutes.csv")
+
+    if "fields" not in employees:
+        raise KeyError("Field data is not available.")
+    else:
+        fields = minutes1["fields"]
     try:
         with open(csv_file_path, 'w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(get_fields())
+            writer.writerow(fields)
             for row in sorted_list:
                 writer.writerow(row)
     except FileNotFoundError:
