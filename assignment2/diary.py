@@ -29,5 +29,9 @@ except Exception as e:
         stack_trace.append(f'File : {trace[0]} , Line : {trace[1]}, Func.Name : {trace[2]}, Message : {trace[3]}')
     
     # Exact spelling and formatting requested by the spec
-    print(f"Stack Trace: {stack_trace}")
     print(f"An exception occurred. {type(e).__name__}")
+    message = str(e)
+    if message:
+        print(f"Exception message: {message}")
+
+    print(f"Stack Trace: {stack_trace}")

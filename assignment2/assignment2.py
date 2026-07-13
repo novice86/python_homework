@@ -217,14 +217,12 @@ def write_sorted_list():
     minutes_list.sort(key=lambda x: x[1])
     sorted_list = list(map(lambda x: (x[0], datetime.strftime(x[1], "%B %d, %Y")), minutes_list))
 
-    csv_file_path = os.path.join(script_dir, "minutes.csv")
-
     if "fields" not in employees:
         raise KeyError("Field data is not available.")
     else:
         fields = minutes1["fields"]
 
-    with open(csv_file_path, 'w', newline='') as file:
+    with open('./minutes.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(fields)
         for row in sorted_list:
