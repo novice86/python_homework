@@ -214,8 +214,8 @@ def write_sorted_list():
     # Get the directory of the current script
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    sorted_list = sorted(minutes_list, key=lambda x: x[1])
-    sorted_list = list(map(lambda x: (x[0], datetime.strftime(x[1], "%B %d, %Y")), sorted_list))
+    minutes_list.sort(key=lambda x: x[1])
+    sorted_list = list(map(lambda x: (x[0], datetime.strftime(x[1], "%B %d, %Y")), minutes_list))
 
     csv_file_path = os.path.join(script_dir, "minutes.csv")
 
@@ -223,18 +223,14 @@ def write_sorted_list():
         raise KeyError("Field data is not available.")
     else:
         fields = minutes1["fields"]
-    try:
-        with open(csv_file_path, 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(fields)
-            for row in sorted_list:
-                writer.writerow(row)
-    except FileNotFoundError:
-        print(f"File {csv_file_path} doesn't exist")
-    except Exception as e:
-        print(f"Exception happened {e}")
+
+    with open(csv_file_path, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(fields)
+        for row in sorted_list:
+            writer.writerow(row)
     
     return sorted_list
-    
+
 
 sorted_list = write_sorted_list()
