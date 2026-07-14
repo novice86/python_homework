@@ -1,4 +1,4 @@
-import os
+import sys
 import traceback
 
 
@@ -21,17 +21,14 @@ try:
             # Update the prompt text for all subsequent loops
             prompt_text = "What else? "
 
-# Catch the general Exception as requested
 except Exception as e:
+    print(f"An exception occurred. {type(e).__name__}")
+
+    # Traceback formatting
     trace_back = traceback.extract_tb(e.__traceback__)
     stack_trace = list()
     for trace in trace_back:
         stack_trace.append(f'File : {trace[0]} , Line : {trace[1]}, Func.Name : {trace[2]}, Message : {trace[3]}')
-    
-    # Exact spelling and formatting requested by the spec
-    print(f"An exception occurred. {type(e).__name__}")
-    message = str(e)
-    if message:
-        print(f"Exception message: {message}")
 
     print(f"Stack Trace: {stack_trace}")
+    sys.exit(1)

@@ -1,5 +1,6 @@
 import csv 
 import os
+import sys
 import traceback
 
 from datetime import datetime
@@ -9,20 +10,11 @@ import custom_module
 
 # Task2
 def read_employees():
-    # Get the directory of the current script
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-
-    # Get the parent directory of the script's directory
-    parent_dir = os.path.dirname(script_dir)
-
-    # Define the path to the employees.csv file in the csv folder
-    employee_csv_path = os.path.join(parent_dir, "csv", "employees.csv")
-
     employees_data = {}
     rows = []
 
     try:
-        with open(employee_csv_path, mode='r') as csvfile:
+        with open('../csv/employees.csv', mode='r') as csvfile:
             reader = csv.reader(csvfile)
             for i, row in enumerate(reader):
                 if i == 0:
@@ -34,14 +26,16 @@ def read_employees():
         return employees_data
 
     except Exception as e:
+        print(f"An exception occurred. {type(e).__name__}")
+
+        # Traceback formatting
         trace_back = traceback.extract_tb(e.__traceback__)
         stack_trace = list()
         for trace in trace_back:
             stack_trace.append(f'File : {trace[0]} , Line : {trace[1]}, Func.Name : {trace[2]}, Message : {trace[3]}')
-    
-        # Exact spelling and formatting requested by the spec
-        print(f"An exception occurred. {type(e).__name__}")
+
         print(f"Stack Trace: {stack_trace}")
+        sys.exit(1)
 
 
 employees = read_employees()
@@ -150,8 +144,10 @@ def set_that_secret(new_secret):
     custom_module.set_secret(new_secret)
 
 
-set_that_secret("new_secret_value")
-print(custom_module.secret)
+if __name__ == "__main__":
+    set_that_secret("my_new_secret_string")
+    print(custom_module.secret)
+
 
 # Task12
 def read_minutes():
@@ -182,7 +178,6 @@ def read_minutes():
     return all_data[0], all_data[1]
 
 
-
 minutes1, minutes2 = read_minutes()
 
 
@@ -211,13 +206,10 @@ print(f"Minutes set: {minutes_list}")
 
 # Task15
 def write_sorted_list():
-    # Get the directory of the current script
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-
     minutes_list.sort(key=lambda x: x[1])
     sorted_list = list(map(lambda x: (x[0], datetime.strftime(x[1], "%B %d, %Y")), minutes_list))
 
-    if "fields" not in employees:
+    if "fields" not in minutes1:
         raise KeyError("Field data is not available.")
     else:
         fields = minutes1["fields"]
