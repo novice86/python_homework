@@ -1,0 +1,34 @@
+import sys
+import traceback
+
+
+try:
+    with open("diary.txt", "a") as file:
+        # Set the initial prompt text
+        prompt_text = "What happened today? "
+        
+        while True:
+            input_text = input(prompt_text)
+            
+            # Check for the exit condition
+            if input_text == "done for now":
+                file.write("done for now\n")
+                break
+            
+            # Write standard entries with a newline
+            file.write(input_text + "\n")
+            
+            # Update the prompt text for all subsequent loops
+            prompt_text = "What else? "
+
+except Exception as e:
+    print(f"An exception occurred. {type(e).__name__}")
+
+    # Traceback formatting
+    trace_back = traceback.extract_tb(e.__traceback__)
+    stack_trace = list()
+    for trace in trace_back:
+        stack_trace.append(f'File : {trace[0]} , Line : {trace[1]}, Func.Name : {trace[2]}, Message : {trace[3]}')
+
+    print(f"Stack Trace: {stack_trace}")
+    sys.exit(1)
