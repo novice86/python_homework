@@ -5,7 +5,7 @@ class TictactoeException(Exception):
 
 
 class Board():
-    _valid_moves = ["upper left", "upper center", "upper right", "middle left", "center", "middle right", "lower left", "lower center", "lower right"]
+    valid_moves = ["upper left", "upper center", "upper right", "middle left", "center", "middle right", "lower left", "lower center", "lower right"]
 
     def __init__(self):
         self.board_array = [
@@ -25,10 +25,10 @@ class Board():
         return "".join(lines)
     
     def move(self, move_string):
-        if not move_string in Board._valid_moves:
-            raise TictactoeException("That's not a valid move")
+        if not move_string in Board.valid_moves:
+            raise TictactoeException("That's not a valid move.")
         
-        move_index = Board._valid_moves.index(move_string)
+        move_index = Board.valid_moves.index(move_string)
         row = move_index // 3 # row
         column = move_index % 3 # column
 
