@@ -9,7 +9,9 @@ def make_hangman(secret_word):
         for char in secret_word
         )
 
-        return guessed_word
+        print(guessed_word)
+
+        return guessed_word == secret_word
     
     return hangman_closure
 
@@ -23,9 +25,6 @@ if __name__ == "__main__":
             print("Invalid iput! Please enter a single letter")
             continue
 
-        current_state = hangman(user_letter)
-        print(current_state)
-
-        if "_" not in current_state:
-            print("Congratulations, you guessed it!")
+        if hangman(user_letter):
+            print("Congratulaitons, you guessed it!")
             break

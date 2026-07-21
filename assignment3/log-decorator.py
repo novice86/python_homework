@@ -37,7 +37,7 @@ def func_with_positional_args(*args):
 
 @logger_decorator
 def func_with_keyword_args(**kwargs):
-    return logger_decorator
+    return "logger_decorator"
 
 
 hello_world()
