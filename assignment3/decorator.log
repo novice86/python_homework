@@ -1,0 +1,12 @@
+function: hello_world
+positional parameters: None
+keyword parameters: None
+return: None
+function: func_with_positional_args
+positional parameters: (1, 2, 3)
+keyword parameters: None
+return: True
+function: func_with_keyword_args
+positional parameters: None
+keyword parameters: {'param1': 1, 'param2': 2, 'param3': 3}
+return: <function logger_decorator at 0x1065ec0e0>
