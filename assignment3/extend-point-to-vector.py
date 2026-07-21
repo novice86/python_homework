@@ -15,16 +15,16 @@ class Point:
     def distance(self, another_point):
         return sqrt((self.x - another_point.x) ** 2 + (self.y - another_point.y) ** 2)
     
-    def __repr__(self):
-        return f"Point({self.x!r}, {self.y!r})"
+    def __str__(self):
+        return f"Point({self.x}, {self.y})"
 
 
 class Vector(Point):
     def __init__(self, x, y):
         super().__init__(x, y)
     
-    def __repr__(self):
-        return f"Vector({self.x!r}, {self.y!r})"
+    def __str__(self):
+        return f"Vector({self.x}, {self.y})"
 
     def __add__(self, other):
         x = self.x + other.x
@@ -33,18 +33,25 @@ class Vector(Point):
         return Vector(x, y)
 
 
-point1 = Point(1, 1)
-print(point1)
-point2 = Point(1, 1)
-print(point2)
-print(f"distance between point1 and point2: {point1.distance(point2)}")
-print(point1 == point2)
+print("--- Demonstrating Point ---")
+point1 = Point(1, 2)
+point2 = Point(4, 6)
+point3 = Point(1, 2)
 
-v1 = Vector(1, 1)
-v2 = Vector(1, 1)
-print(v1)
-print(v2)
-v3 = v1 + v2
-print(v3)
+print(f"Point 1: {point1}")
+print(f"Point 2: {point2}")
+print(f"Point 3: {point3}")
+
+print(f"\nDistance between Point 1 and Point 2: {point1.distance(point2)}")
+print(f"Equality (Point 1 == Point 2): {point1 == point2}")
+print(f"Equality (Point 1 == Point 3): {point1 == point3}") 
+
+print("\n--- Demonstrating Vector ---")
+v1 = Vector(2, 3)
+v2 = Vector(4, 1)
+
+print(f"Vector 1: {v1}")
+print(f"Vector 2: {v2}")
+print(f"Vector Addition (v1 + v2): {v1 + v2}")
 
         

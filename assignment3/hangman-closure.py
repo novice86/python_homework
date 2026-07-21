@@ -1,14 +1,15 @@
 def make_hangman(secret_word):
-    secret_word = secret_word.lower()
     guesses = set()
 
     def hangman_closure(letter):
         guesses.add(letter.lower())
 
-        guessed_word = "".join(char if char in guesses else "_" for char in secret_word)
-        print(guessed_word)
+        guessed_word = "".join(
+            char if char.lower() in guesses or not char.isalpha() else "_" 
+        for char in secret_word
+        )
 
-        return guessed_word == secret_word
+        return guessed_word
     
     return hangman_closure
 
@@ -22,6 +23,9 @@ if __name__ == "__main__":
             print("Invalid iput! Please enter a single letter")
             continue
 
-        if hangman(user_letter):
+        current_state = hangman(user_letter)
+        print(current_state)
+
+        if "_" not in current_state:
             print("Congratulations, you guessed it!")
             break
