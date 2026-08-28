@@ -1,0 +1,25 @@
+# Challenges and How to Solve Them
+
+### 1. Character Encoding
+
+**Challenge:** Web pages can contain special or non-ASCII characters, such as accented letters. Using the wrong encoding when saving scraped data can cause these characters to display incorrectly.
+
+**Solution:** Use UTF-8 encoding when saving text or JSON files. When using JSON, `ensure_ascii=False` can be used to preserve Unicode characters in a human-readable format.
+
+### 2. Waiting for Elements to Load
+
+**Challenge:** Web page elements may not be available or ready to interact with immediately after the page loads. Trying to click an element too early can cause Selenium errors.
+
+**Solution:** Use Selenium's `WebDriverWait` with an appropriate Expected Condition. For example, `element_to_be_clickable()` can be used when an element needs to be clicked. This allows Selenium to wait until the element is ready instead of using a fixed delay.
+
+### 3. Finding the Correct Elements
+
+**Challenge:** A web page can contain many elements with the same HTML tag. Searching only by tag name may return unrelated elements.
+
+**Solution:** Use specific CSS selectors that combine the HTML tag and class name. For example, `li.cp-search-result-item` identifies `<li>` elements with the `cp-search-result-item` class and helps ensure that only the book search results are selected.
+
+### 4. Handling Missing Elements
+
+**Challenge:** Some search results may not contain all the expected information. If Selenium cannot find an element, it can raise an exception and stop the program.
+
+**Solution:** Use exception handling with `try/except` and provide a default value when an element cannot be found. This allows the scraper to continue processing the remaining results.
