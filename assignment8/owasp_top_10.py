@@ -57,5 +57,8 @@ try:
 except Exception as e:
     print("Exception occurred:", str(e))
 
+finally:
+    driver.quit()
+
 
 
