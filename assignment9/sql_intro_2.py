@@ -26,5 +26,5 @@ with sqlite3.connect("../db/lesson.db") as conn:
     print(df_grouped.head())
 
     # Sort the DataFrame by the product_name column.
-    df_sorted = df.sort_values(by="product_name")
+    df_sorted = df_grouped.sort_values(by="product_name")
     df_sorted.to_csv("order_summary.csv", index=False, encoding="utf-8-sig")

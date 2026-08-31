@@ -3,28 +3,47 @@ import os
 
 
 def create_tables(conn):
+    cursor = conn.cursor()
+
     try:
-        cursor = conn.cursor()
-        # Create the 'magazines' table
-        cursor.executescript("""
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS publishers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL UNIQUE
             );
-
+        """)
+        print("Publishers table checked/created.")
+    except sqlite3.Error as e:
+        print(f"Database error while creating 'publishers' table: {e}")
+    
+    try:
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS magazines (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL UNIQUE,
                 publisher_id INTEGER NOT NULL,
                 FOREIGN KEY (publisher_id) REFERENCES publishers(id)
             );
-
+        """)
+        print("Magazines table checked/created.")
+    except sqlite3.Error as e:
+        print(f"Database error while creating 'magazines' table: {e}")
+        
+    try:
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS subscribers (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
-                address TEXT NOT NULL
+                address TEXT NOT NULL,
+                UNIQUE(name, address)
             );
+        """)
+        print("Subscribers table checked/created.")
+    except sqlite3.Error as e:
+        print(f"Database error while creating 'subscribers' table: {e}")
 
+    try:
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS subscriptions (
                 subscriber_id INTEGER NOT NULL,
                 magazine_id INTEGER NOT NULL,
@@ -34,10 +53,9 @@ def create_tables(conn):
                 FOREIGN KEY (magazine_id) REFERENCES magazines(id)
             );
         """)
-
-        print("Tables created successfully.")
+        print("Subscriptions table checked/created.")
     except sqlite3.Error as e:
-        print("Error connecting to the database:", e)
+        print(f"Database error while creating 'subscriptions' table: {e}")
 
 
 def add_publisher(conn, name):
@@ -150,7 +168,7 @@ try:
 
     # Task 3: Populate the Database with Sample Data
     # Enable foreign key support
-    conn.execute("PRAGMA foreign_keys = ON;")
+    conn.execute("PRAGMA foreign_keys = 1;")
 
     # Populate Publishers
     pub1_id = add_publisher(conn, "Tech Press")
