@@ -35,13 +35,13 @@ with sqlite3.connect(db_path) as conn:
 sql_statement = """
     SELECT c.customer_name, AVG(total_price) AS average_total_price
     FROM customers c
-    JOIN (
+    LEFT JOIN (
         SELECT o.customer_id AS customer_id_b, SUM(l.quantity * p.price) AS total_price
         FROM orders o
         JOIN line_items l ON o.order_id = l.order_id
         JOIN products p on l.product_id = p.product_id
         GROUP BY o.order_id
-    ) ON c.customer_id = customer_id_b
+    ) AS sq ON c.customer_id = sq.customer_id_b
     GROUP BY c.customer_id    
 """
 
@@ -97,6 +97,7 @@ with sqlite3.connect(db_path) as conn:
                 VALUES (?, ?, ?)
             """, (order_id, p_id, 10))
 
+        conn.commit()
 
         cursor.execute("""
             SELECT l.line_item_id, l.quantity, p.product_name
@@ -119,7 +120,7 @@ with sqlite3.connect(db_path) as conn:
 
 # Task 4: Aggregation with HAVING
 sql_statement = """
-    SELECT e.first_name, e.last_name, COUNT(*) as orders_count 
+    SELECT e.employee_id, e.first_name, e.last_name, COUNT(*) as orders_count 
     FROM employees e 
     JOIN orders o ON e.employee_id = o.employee_id 
     GROUP BY e.employee_id 
@@ -134,9 +135,9 @@ with sqlite3.connect(db_path) as conn:
         cursor.execute(sql_statement)
         results = cursor.fetchall()
 
-        print("First Name | Last Name | Orders Count")
-        print("-------------------------------------")
+        print("Employee ID | First Name | Last Name | Orders Count")
+        print("------------------------------------------------")
         for row in results:
-            print(f"{row['first_name']} | {row['last_name']} | {row['orders_count']}")
+            print(f"{row['employee_id']} | {row['first_name']} | {row['last_name']} | {row['orders_count']}")
     except sqlite3.Error as e:
         print(f"Database error: {e}")
