@@ -33,7 +33,7 @@ with sqlite3.connect(db_path) as conn:
 
 # Task 2: Understanding Subqueries
 sql_statement = """
-    SELECT c.customer_name, AVG(total_price) AS average_total_price
+    SELECT c.customer_id, c.customer_name, AVG(sq.total_price) AS average_total_price
     FROM customers c
     LEFT JOIN (
         SELECT o.customer_id AS customer_id_b, SUM(l.quantity * p.price) AS total_price
@@ -53,10 +53,11 @@ with sqlite3.connect(db_path) as conn:
         cursor.execute(sql_statement)
         results = cursor.fetchall()
 
-        print("Customer Name | Average Total Price")
-        print("-----------------------------------")
+        print("Customer ID | Customer Name | Average Total Price")
+        print("--------------------------------------------------")
         for row in results:
-            print(f"{row['customer_name']} | {row['average_total_price']:.2f}")
+            avg_price = row['average_total_price'] if row['average_total_price'] is not None else 0
+            print(f"{row['customer_id']} | {row['customer_name']} | {avg_price:.2f}")
     except sqlite3.Error as e:
         print(f"Database error: {e}")
 
@@ -97,8 +98,6 @@ with sqlite3.connect(db_path) as conn:
                 VALUES (?, ?, ?)
             """, (order_id, p_id, 10))
 
-        conn.commit()
-
         cursor.execute("""
             SELECT l.line_item_id, l.quantity, p.product_name
             FROM line_items l
@@ -107,6 +106,9 @@ with sqlite3.connect(db_path) as conn:
         """, (order_id, ))
 
         final_results = cursor.fetchall()
+
+        conn.commit()
+
         print(f"{'Line Item ID':<15} | {'Quantity':<10} | {'Product Name'}")
         print("-" * 50)
         
@@ -120,11 +122,11 @@ with sqlite3.connect(db_path) as conn:
 
 # Task 4: Aggregation with HAVING
 sql_statement = """
-    SELECT e.employee_id, e.first_name, e.last_name, COUNT(*) as orders_count 
+    SELECT e.employee_id, e.first_name, e.last_name, COUNT(o.order_id) as order_count 
     FROM employees e 
     JOIN orders o ON e.employee_id = o.employee_id 
-    GROUP BY e.employee_id 
-    HAVING COUNT(*) > 5;
+    GROUP BY e.employee_id, e.first_name, e.last_name
+    HAVING COUNT(o.order_id) > 5;
 """
 
 with sqlite3.connect(db_path) as conn:
@@ -135,9 +137,9 @@ with sqlite3.connect(db_path) as conn:
         cursor.execute(sql_statement)
         results = cursor.fetchall()
 
-        print("Employee ID | First Name | Last Name | Orders Count")
+        print("Employee ID | First Name | Last Name | Order Count")
         print("------------------------------------------------")
         for row in results:
-            print(f"{row['employee_id']} | {row['first_name']} | {row['last_name']} | {row['orders_count']}")
+            print(f"{row['employee_id']} | {row['first_name']} | {row['last_name']} | {row['order_count']}")
     except sqlite3.Error as e:
         print(f"Database error: {e}")
